@@ -10,3 +10,6 @@
 [![download latest release](https://img.shields.io/badge/SUBTITLE%20EDIT-download-000F39.svg)](https://github.com/SubtitleEdit/subtitleedit/releases/latest) 
 
 <http://www.nikse.dk/SubtitleEdit/>
+
+A custom version of the **Subtitle Edit** forked by **Orange Logic**, at the original commit **14061319a24b09ac9677b9a43b8303882ae1772b**.
+The changes were mainly made to Subtitle, SubtitleFormat properties' visibility. And additional string extension methods were also added
