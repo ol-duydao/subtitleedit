@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             const string paragraphWriteFormat = "{0}-{1}\r\n{2}";
             var sb = new StringBuilder();

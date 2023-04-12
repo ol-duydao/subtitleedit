@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             const string format = "[{0}]{3}{3}{2}{3}{3}[{1}]{3}";
             var sb = new StringBuilder();

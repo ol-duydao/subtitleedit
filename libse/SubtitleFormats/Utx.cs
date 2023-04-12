@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //I'd forgotten.
             //#0:02:58.21,0:03:00.16

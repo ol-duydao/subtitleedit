@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             XmlNode styleHead = null;
             if (subtitle.Header != null)

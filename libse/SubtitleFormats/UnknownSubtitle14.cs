@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //<Phrase TimeStart="4020" TimeEnd="6020">
             //  <Text>XYZ PRESENTS</Text>

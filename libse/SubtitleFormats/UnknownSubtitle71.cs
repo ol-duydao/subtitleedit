@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             // 1 .
             // 0 0 : 0 0 : 0 4 : 1 2

@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)

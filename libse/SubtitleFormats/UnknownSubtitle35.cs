@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0:0000}.{1:00}", (int)tc.TotalSeconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)

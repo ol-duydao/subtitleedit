@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return line;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             var lineSb = new StringBuilder();

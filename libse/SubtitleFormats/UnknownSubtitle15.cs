@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 100);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //<page>
             // <video>

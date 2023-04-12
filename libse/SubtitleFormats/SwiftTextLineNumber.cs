@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //SUBTITLE: 1   TIMEIN: 00:00:00:00 TIMEOUT: 00:00:04:00
             //Voor de oorlog

@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(subtitle.Header) && (subtitle.Header.Contains("[ar:") || subtitle.Header.Contains("[ti:")))

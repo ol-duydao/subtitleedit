@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             string paragraphWriteFormat = "#{0:00000}\t{1}\t{2}\t{3}\t#F\tCC00000D0\t#C " + Environment.NewLine + "{4}";
             const string timeFormat = "{0:00}:{1:00}:{2:00}.{3:00}";

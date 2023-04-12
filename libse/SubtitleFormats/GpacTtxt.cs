@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +

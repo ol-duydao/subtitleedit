@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             string paragraphWriteFormat = string.Empty.PadLeft(5, ' ') + "{4}:  {0}  {1}{3}{2}{3}";
             var sb = new StringBuilder();

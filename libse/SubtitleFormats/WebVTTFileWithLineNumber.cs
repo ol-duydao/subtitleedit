@@ -19,10 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return ".vtt"; }
         }
 
-        public override string Name
-        {
-            get { return "WebVTT File with#"; }
-        }
+        public override string Name => "WebVTTWithLineNumber";
 
         public override bool IsTimeBased
         {
@@ -36,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             const string timeCodeFormatNoHours = "{0:00}:{1:00}.{2:000}"; // h:mm:ss.cc
             const string timeCodeFormatHours = "{0}:{1:00}:{2:00}.{3:000}"; // h:mm:ss.cc
@@ -48,13 +45,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string start = string.Format(timeCodeFormatNoHours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
-                string end = string.Format(timeCodeFormatNoHours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
+                int iMillisecondsStart = roundSecond ? 0 : p.StartTime.Milliseconds;
+                int iMillisecondsEnd = roundSecond ? 0 : p.EndTime.Milliseconds;
+
+                string start = string.Format(timeCodeFormatNoHours, p.StartTime.Minutes, p.StartTime.Seconds, iMillisecondsStart);
+                string end = string.Format(timeCodeFormatNoHours, p.EndTime.Minutes, p.EndTime.Seconds, iMillisecondsEnd);
 
                 if (p.StartTime.Hours > 0 || p.EndTime.Hours > 0)
                 {
-                    start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
-                    end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
+                    start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, iMillisecondsStart);
+                    end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, iMillisecondsEnd);
                 }
 
                 string style = string.Empty;

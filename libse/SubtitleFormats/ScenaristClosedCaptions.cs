@@ -678,7 +678,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return text;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             sb.AppendLine("Scenarist_SCC V1.0");

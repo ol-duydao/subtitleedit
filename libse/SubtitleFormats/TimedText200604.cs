@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +

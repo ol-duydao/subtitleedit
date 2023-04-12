@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             const string xmpTemplate = @"<XIF version='1.0' filename='file:///filename.xif'>
   <FileHeader>

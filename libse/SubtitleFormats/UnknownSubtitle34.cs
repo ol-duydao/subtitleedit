@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //08:55:05  >>> WELCOME BACK.
             //08:59:49  """OFF THE RECORD"" STARTS RIGHT NOW."

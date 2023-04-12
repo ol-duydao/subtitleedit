@@ -54,15 +54,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
-            const string paragraphWriteFormat = "{0}\r\n{1} --> {2}\r\n{3}\r\n\r\n";
+            const string paragraphWriteFormat = "{0}{4}{1} --> {2}{4}{3}{4}{4}";
 
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                //string s = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text);
+                if (roundSecond)
+                {
+                    sb.AppendFormat(paragraphWriteFormat, p.Number, TimeCode.FromSeconds(Math.Floor(p.StartTime.TotalSeconds)), TimeCode.FromSeconds(Math.Floor(p.EndTime.TotalSeconds)), p.Text, Environment.NewLine);
+                }
+                else
+                {
+                    sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
+                }
+               
             }
             return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
         }

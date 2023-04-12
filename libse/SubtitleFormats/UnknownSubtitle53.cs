@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //10:56:54:12 FEATURING BRIAN LORENTE AND THE
             //10:56:59:18 USUAL SUSPECTS.

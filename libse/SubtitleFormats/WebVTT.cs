@@ -10,25 +10,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class WebVTT : SubtitleFormat
     {
-
-        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
-
-        public override string Extension
+        public class Const
         {
-            get { return ".vtt"; }
+            public const string WEB_VTT_NAME = "WebVTT";
         }
+        
+        public static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        public static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        public static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
 
-        public override string Name
-        {
-            get { return "WebVTT"; }
-        }
+        public override string Extension => ".vtt";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => Const.WEB_VTT_NAME;
+
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -37,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.cc
             const string paragraphWriteFormat = "{0} --> {1}{4}{2}{3}{4}";
@@ -47,8 +42,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
-                string end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
+                int iMillisecondsStart = roundSecond ? 0 : p.StartTime.Milliseconds;
+                int iMillisecondsEnd = roundSecond ? 0 : p.EndTime.Milliseconds;
+
+                string start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, iMillisecondsStart);
+                string end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, iMillisecondsEnd);
+              
 
                 string style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
@@ -186,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return text;
         }
 
-        private static TimeCode GetTimeCodeFromString(string time)
+        public static TimeCode GetTimeCodeFromString(string time)
         {
             // hh:mm:ss.mmm
             string[] timeCode = time.Trim().Split(':', '.', ' ');

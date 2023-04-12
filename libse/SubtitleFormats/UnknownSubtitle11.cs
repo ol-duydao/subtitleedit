@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0}:{1:00}:{2:00}", tc.Hours, tc.Minutes, tc.Seconds);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)

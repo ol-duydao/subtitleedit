@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //150583||3968723||Rythme standard quatre-par-quatre.\~- Sûr... Accord d'entrée, D majeur?||
             //155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||

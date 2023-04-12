@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             //10 01 37 23   10 01 42 01 Makkhi  (newline is TAB)
             const string paragraphWriteFormat = "{0}\t{1}\t{2}";

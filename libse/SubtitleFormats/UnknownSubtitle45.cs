@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"0 2 1.0 1.0 3.0 048 0400 0040 0500 100 100 0 100 0 6600 6600 01

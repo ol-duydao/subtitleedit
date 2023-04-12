@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return (int)Math.Round(15.7 * durationSeconds);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"TVS - TITRA FILM

@@ -29,6 +29,22 @@ namespace Nikse.SubtitleEdit.Core
                 return true;
             return false;
         }
+        
+        public static string RemoveChar(this string value, char charToRemove)
+        {
+            char[] array = new char[value.Length];
+            int arrayIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (ch != charToRemove)
+                {
+                    array[arrayIndex++] = ch;
+                }
+            }
+
+            return new string(array, 0, arrayIndex);
+        }
 
         public static bool LineBreakStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
@@ -234,6 +250,25 @@ namespace Nikse.SubtitleEdit.Core
         {
             return RichTextToPlainText.ConvertToText(value);
         }
+        
+        public static bool IsOnlyControlCharactersOrWhiteSpace(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return true;
+            }
 
+            int max = s.Length;
+            for (int index = 0; index < max; index++)
+            {
+                var ch = s[index];
+                if (!char.IsControl(ch) && !char.IsWhiteSpace(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

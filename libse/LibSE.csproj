@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
     <AssemblyName>libse</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,9 +32,18 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\src\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <HintPath>..\src\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160, processorArchitecture=MSIL">
+      <HintPath>..\src\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BluRaySup\BluRaySupPalette.cs" />
@@ -46,6 +55,7 @@
     <Compile Include="BluRaySup\PaletteInfo.cs" />
     <Compile Include="BluRaySup\ToolBox.cs" />
     <Compile Include="BmpReader.cs" />
+    <Compile Include="CaptionTrackContent.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ContainerFormats\AviRiffData.cs" />
     <Compile Include="ContainerFormats\Ebml\Element.cs" />
@@ -484,6 +494,13 @@
     <Compile Include="XmlDeserializerGenerator.cs" />
     <Compile Include="XSub.cs" />
     <Compile Include="ZipExtractor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Hunspellx64.dll" />
+    <Content Include="Hunspellx86.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

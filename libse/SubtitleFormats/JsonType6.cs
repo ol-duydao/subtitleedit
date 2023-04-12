@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly char[] CharSpace = { ' ' };
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var sb = new StringBuilder();
             sb.Append("{\"words\":[");

@@ -37,13 +37,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
-            string language = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
-            var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
-            string languageTag = string.Format("{0}CC", language.Replace("_", string.Empty).ToUpper());
-            string languageName = ci.Parent.EnglishName;
-            string languageStyle = string.Format(".{0} [ name: {1}; lang: {2} ; SAMIType: CC ; ]", languageTag, languageName, language.Replace("_", "-"));
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var ci = CultureInfo.GetCultureInfo(language);
+            language = CultureInfo.CreateSpecificCulture(ci.Name).Name;
+            string languageTag = $"{language.Replace("-", string.Empty).ToUpperInvariant()}CC";
+            string languageName = ci.EnglishName;
+            string languageStyle = $".{languageTag} [ name: {languageName}; lang: {language.Replace("_", "-")} ; SAMIType: CC ; ]";
             languageStyle = languageStyle.Replace("[", "{").Replace("]", "}");
 
             string header =
@@ -91,13 +92,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string paragraphWriteFormat = @"<SYNC Start={0}><P Class={3}>{2}" + Environment.NewLine +
                                            @"<SYNC Start={1}><P Class={3}>&nbsp;";
             string paragraphWriteFormatOpen = @"<SYNC Start={0}><P Class={2}>{1}";
-            if (Name == new SamiModern().Name)
+            if (Name == "SAMI modern")
             {
                 paragraphWriteFormat = "<SYNC Start=\"{0}\"><P Class=\"{3}\">{2}</P></SYNC>" + Environment.NewLine +
                                        "<SYNC Start=\"{1}\"><P Class=\"{3}\">&nbsp;</P></SYNC>";
                 paragraphWriteFormatOpen = "<SYNC Start=\"{0}\"><P Class=\"{2}\">{1}</P></SYNC>";
             }
-            else if (Name == new SamiYouTube().Name)
+            else if (Name == "SAMI YouTube")
             {
                 paragraphWriteFormat = "<SYNC Start=\"{0}\"><P Class=\"{3}\">{2}</P></SYNC>" + Environment.NewLine +
                                        "<SYNC Start=\"{1}\"><P Class=\"{3}\"></P></SYNC>";
@@ -158,21 +159,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = EncodeText(text);
                 }
 
-                if (Name == new SamiModern().Name)
+                if (Name == "SAMI modern")
+                {
                     text = text.Replace(Environment.NewLine, "<br />");
+                }
                 else
+                {
                     text = text.Replace(Environment.NewLine, "<br>");
+                }
 
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
+                {
                     currentClass = p.Extra;
+                }
 
-                var startMs = (long)(Math.Round(p.StartTime.TotalMilliseconds));
+                var startMs = (long)(Math.Round(p.StartTime.TotalMilliseconds));               
                 var endMs = (long)(Math.Round(p.EndTime.TotalMilliseconds));
+
+                if (roundSecond)
+                {
+                    startMs = (long)Math.Floor(startMs / 1000.0d) * 1000;
+                    endMs = (long)Math.Floor(endMs / 1000.0d) * 1000;
+                }
+
                 if (next != null && Math.Abs(((long)Math.Round(next.StartTime.TotalMilliseconds)) - endMs) < 1)
+                {
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, startMs, text, currentClass));
+                }
                 else
+                {
                     sb.AppendLine(string.Format(paragraphWriteFormat, startMs, endMs, text, currentClass));
+                }
+
                 count++;
             }
             sb.AppendLine("</BODY>");

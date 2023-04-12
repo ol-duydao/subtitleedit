@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Convert.ToInt64(Math.Round(time.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             var xml = new XmlDocument();
             xml.LoadXml("<?xml version=\"1.0\" encoding=\"utf-8\" ?><timedtext></timedtext>");

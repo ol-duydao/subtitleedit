@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -240,35 +241,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle82(),
                 };
 
-                string path = Configuration.PluginsDirectory;
-                if (Directory.Exists(path))
+                var path = Configuration.PluginsDirectory;
+                if (!Directory.Exists(path)) return _allSubtitleFormats;
+                var pluginFiles = Directory.GetFiles(path, "*.DLL");
+                foreach (var pluginFileName in pluginFiles)
                 {
-                    string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
-                    foreach (string pluginFileName in pluginFiles)
+                    try
                     {
-                        try
+                        var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
+                        foreach (var exportedType in assembly.GetExportedTypes())
                         {
-                            var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
-                            if (assembly != null)
+                            try
                             {
-                                foreach (var exportedType in assembly.GetExportedTypes())
-                                {
-                                    try
-                                    {
-                                        object pluginObject = Activator.CreateInstance(exportedType);
-                                        var po = pluginObject as SubtitleFormat;
-                                        if (po != null)
-                                            _allSubtitleFormats.Insert(1, po);
-                                    }
-                                    catch
-                                    {
-                                    }
-                                }
+                                object pluginObject = Activator.CreateInstance(exportedType);
+                                var po = pluginObject as SubtitleFormat;
+                                if (po != null)
+                                    _allSubtitleFormats.Insert(1, po);
+                            }
+                            catch
+                            {
+                                // ignored
                             }
                         }
-                        catch
-                        {
-                        }
+                    }
+                    catch
+                    {
+                        // ignored
                     }
                 }
 
@@ -278,81 +276,75 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         protected int _errorCount;
 
-        abstract public string Extension
+        public abstract string Extension
         {
             get;
         }
 
-        abstract public string Name
+        public abstract string Name
         {
             get;
         }
 
-        abstract public bool IsTimeBased
+        public abstract bool IsTimeBased
         {
             get;
         }
+        
+        protected double _frameRate = 23.976d;
 
-        public bool IsFrameBased
+        public double FrameRate
         {
-            get
-            {
-                return !IsTimeBased;
-            }
+            get => _frameRate;
+
+            set => _frameRate = value;
         }
 
-        public string FriendlyName
-        {
-            get
-            {
-                return string.Format("{0} ({1})", Name, Extension);
-            }
-        }
+        public bool IsFrameBased => !IsTimeBased;
 
-        public int ErrorCount
-        {
-            get
-            {
-                return _errorCount;
-            }
-        }
+        public string FriendlyName => $"{Name} ({Extension})";
 
-        abstract public bool IsMine(List<string> lines, string fileName);
+        public int ErrorCount => _errorCount;
 
-        abstract public string ToText(Subtitle subtitle, string title);
+        public abstract bool IsMine(List<string> lines, string fileName);
 
-        abstract public void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
+        public abstract string ToText(Subtitle subtitle, string title, bool roundSecond = false);
 
-        public bool IsVobSubIndexFile
-        {
-            get
-            {
-                return string.CompareOrdinal(Extension, ".idx") == 0;
-            }
-        }
+        public abstract void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
+
+        public bool IsVobSubIndexFile => string.CompareOrdinal(Extension, ".idx") == 0;
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
         }
 
-        public virtual List<string> AlternateExtensions
+        public virtual List<string> AlternateExtensions => new List<string>();
+
+        /// <summary>
+        /// Gets the subtitle instance format by its name.
+        /// </summary>
+        /// <param name="name">Name of the format</param>
+        /// <returns></returns>
+        public static SubtitleFormat GetSubtitleFormatByName(string name)
         {
-            get
-            {
-                return new List<string>();
-            }
+            return AllSubtitleFormats.FirstOrDefault(o => string.Equals(o.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int MillisecondsToFrames(double milliseconds)
         {
             return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
         }
-
-        public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
+        
+        public static int MillisecondsToFrames(double milliseconds, double frameRate)
         {
-            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
-            if (frames >= Configuration.Settings.General.CurrentFrameRate)
-                frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
+            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / frameRate));
+        }
+
+        public static int MillisecondsToFramesMaxFrameRate(double milliseconds, double frameRate = 23.97d)
+        {
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / frameRate));
+            if (frames >= frameRate)
+                frames = (int)(frameRate - 0.01);
             return frames;
         }
 
@@ -361,19 +353,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
         }
 
-        public static int FramesToMillisecondsMax999(double frames)
+        public static int FramesToMilliseconds(double frames, double frameRate)
         {
-            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / frameRate));
+        }
+
+        public static int FramesToMillisecondsMax999(double frames, double frameRate = 23.97d)
+        {
+            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / frameRate));
             return Math.Min(ms, 999);
         }
 
-        public virtual bool HasStyleSupport
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool HasStyleSupport => false;
 
         public bool BatchMode { get; set; }
 
@@ -394,12 +385,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
         }
 
-        public virtual bool IsTextBased
+        public virtual bool IsTextBased => true;
+        
+        public static double GetFrameForCalculation(double frameRate)
         {
-            get
+            if (Math.Abs(frameRate - 23.976) < 0.01)
             {
-                return true;
+                return 24000.0 / 1001.0;
             }
+            if (Math.Abs(frameRate - 29.97) < 0.01)
+            {
+                return 30000.0 / 1001.0;
+            }
+            if (Math.Abs(frameRate - 59.94) < 0.01)
+            {
+                return 60000.0 / 1001.0;
+            }
+
+            return frameRate;
         }
 
         protected TimeCode DecodeTimeCodeFramesTwoParts(string[] parts)

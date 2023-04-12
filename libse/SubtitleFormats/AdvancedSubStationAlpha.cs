@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override string ToText(Subtitle subtitle, string title, bool roundSecond = false)
         {
             string header = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
